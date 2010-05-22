@@ -1,0 +1,4 @@
+rvm use 1.9.1@rails3
+export SPORK_PATH=/Users/adam/code/other\ projects/spork/bin/spork
+export TESTDRB_PATH=/Users/adam/code/other\ projects/spork-testunit/bin/testdrb
+

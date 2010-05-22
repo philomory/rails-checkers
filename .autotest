@@ -1,0 +1,47 @@
+$spork_server_process = nil
+$spork_server_port = nil
+
+require 'autotest/rails'
+require 'autotest/restart'
+require 'autotest/timestamp'
+#require 'redgreen/autotest'
+require 'autotest/growl'
+
+class Autotest::Rails
+  def testdrb
+    ENV['TESTDRB_PATH'] || 'testdrb'
+  end
+
+  def make_test_cmd files_to_test
+    cmds = []
+    full, partial = reorder(files_to_test).partition { |k,v| v.empty? }
+    base_cmd = "\"#{testdrb}\" -p #{$spork_server_port}"
+
+    unless full.empty? then
+      classes = full.map {|k,v| k}.flatten.uniq
+      classes.each do |klass|
+        cmds << "#{base_cmd} #{klass} | #{unit_diff}"
+      end
+    end
+
+    partial.each do |klass, methods|
+      regexp = Regexp.union(*methods).source
+      cmds << "#{base_cmd} #{klass} -n \"/^(#{regexp})$/\" | #{unit_diff}"
+    end
+
+    return cmds.join("#{SEP} ")
+  end
+end
+
+Autotest::Rails.add_hook :initialize do
+  puts "What port is Spork listening on? (default: 8988)"
+  input = gets.chomp.to_i
+  $spork_server_port = input.zero? ? 8988 : input
+end
+
+Autotest::Rails.add_hook :ran_command do |autotest|
+  result = Autotest::Result.new(autotest)
+  $stderr.puts "Tests could not be run. Check on Spork.\a\a\a\a" unless result.exists?
+  true
+end
+

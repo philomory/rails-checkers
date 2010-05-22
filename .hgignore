@@ -1,0 +1,6 @@
+syntax: glob
+.bundle
+.DS_Store
+db/*.sqlite3
+log/*.log
+tmp/**/*
