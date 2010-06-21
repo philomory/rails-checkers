@@ -2,28 +2,17 @@ require 'rubygems'
 require 'spork'
 
 Spork.prefork do
-  # Loading more in this block will cause your tests to run faster. However, 
-  # if you change any configuration or code from libraries loaded here, you'll
-  # need to restart spork for it take effect.
   ENV["RAILS_ENV"] = "test"
   require File.expand_path('../../config/environment', __FILE__)
   require 'rails/test_help'
-  require 'authlogic/test_case'
+  #require 'authlogic/test_case'
   require 'machinist/active_record'
   require 'sham'
   require 'faker'
+  ActiveRecord::Base.clear_active_connections!
 end
 
 Spork.each_run do
-  # This code will be run each time you run your specs.
-  if in_memory_database?
-    puts "Setting up in memory database"
-    old_stdout = $stdout
-    $stdout = open('/dev/null','w')
-    load "#{Rails.root}/db/schema.rb"
-    $stdout.close
-    $stdout = old_stdout
-  end
   Dir[File.expand_path('../blueprints/*.rb',__FILE__)].each {|f| require f}
 end
 

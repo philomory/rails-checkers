@@ -9,6 +9,12 @@ class GameTest < ActiveSupport::TestCase
     end
   end
   
+  test "a game without a board string shouldn't be allowed" do
+    assert_raises(ActiveRecord::RecordInvalid) do
+      Game.make(:board_string => nil)
+    end
+  end
+  
   test "a game without player1 shouldn't be allowed" do
     assert_raises(ActiveRecord::RecordInvalid) do
       Game.make(:player1 => nil)
@@ -29,7 +35,6 @@ class GameTest < ActiveSupport::TestCase
   end
   
   test "a game will give you its board" do
-    skip
     assert_kind_of Board, Game.make.board
   end
   

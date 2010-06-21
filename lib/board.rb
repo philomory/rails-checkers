@@ -97,6 +97,34 @@ class Board
     crown_if_needed(new_index)
   end
   
+  def move_available?(color)
+    if color == :white
+      @padded_board_string =~ /_.{3,4}[wW]|W.{3,4}_/
+    elsif color == :black
+      @padded_board_string =~ /_.{3,4}B|[bB].{3,4}_/
+    end
+  end
+  
+  # Considered using a more legible iterative approach here, but the regex approach
+  # is _twenty-eight times faster_. Considering that this is an operation that will
+  # have to be performed quite frequently, totally worth it. Anyway, the regex is
+  # fairly legible anyway.
+  def jump_available?(color)
+    if color == :white
+      @padded_board_string =~ /_...[bB]...[wW]|_....[bB]....[wW]|W...[bB]..._|W....[bB]...._/
+    elsif color == :black
+      @padded_board_string =~ /[bB]...[wW]..._|[bB]....[wW]...._|_...[wW]...B|_....[wW]....B/
+    end
+  end
+    
+  def winner
+    s = @padded_board_string
+    white = (s =~ /w/i); black = (s =~ /b/i)
+    if     white and not black then :white
+    elsif  black and not white then :black
+    end
+  end
+  
   def to_s
     position_string
   end
@@ -178,13 +206,6 @@ class Board
     @padded_board_string[index]
   end
   
-  def jump_available?(color)
-    (0...46).to_a.any? do |index|
-      sq = self[index]
-      sq.color == color && [:ne,:se,:nw,:sw].any? {|dir| can_jump?(index,dir) }
-    end
-  end
-  
   def crown_if_needed(index)
     if self[index].white_pawn? && index.between?(5,8) # bottom row
       @padded_board_string[index] = :W
@@ -239,8 +260,5 @@ class Board
     :se => -4,
     :sw => -5
   }
-  
-  
-  
   
 end

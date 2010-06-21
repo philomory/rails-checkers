@@ -33,10 +33,19 @@ class Autotest::Rails
   end
 end
 
-Autotest::Rails.add_hook :initialize do
+Autotest::Rails.add_hook :initialize do |autotest|
   puts "What port is Spork listening on? (default: 8988)"
   input = gets.chomp.to_i
   $spork_server_port = input.zero? ? 8988 : input
+
+  autotest.add_exception('.hg')
+  autotest.add_exception('.DS_Store')
+  autotest.add_mapping %r%^test/blueprints/(.*)s.rb% do |_,m|
+    ["test/unit/#{m[1]}_test.rb",
+     "test/controllers/#{m[1]}_controller_test.rb",
+     "test/views/#{m[1]}_view_test.rb",
+     "test/functional/#{m[1]}_controller_test.rb"]
+  end
 end
 
 Autotest::Rails.add_hook :ran_command do |autotest|
@@ -44,4 +53,3 @@ Autotest::Rails.add_hook :ran_command do |autotest|
   $stderr.puts "Tests could not be run. Check on Spork.\a\a\a\a" unless result.exists?
   true
 end
-

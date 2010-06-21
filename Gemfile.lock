@@ -1,11 +1,6 @@
 --- 
-hash: bef6fa68d977234fce5a55f4898935f8d7d55d66
+hash: e5b10f2f77dcf2ee0c4d6b0ea3a0672c264efdfc
 sources: 
-- Git: 
-    git: git://github.com/odorcicd/authlogic.git
-    branch: rails3
-    uri: git://github.com/odorcicd/authlogic.git
-    ref: a087ad0cba3c165ba22fcf176c28b6f7517931e8
 - Rubygems: 
     uri: http://rubygems.org
 specs: 
@@ -55,9 +50,6 @@ specs:
     version: 3.0.0.beta3
 - activeresource: 
     version: 3.0.0.beta3
-- authlogic: 
-    version: 2.1.3
-    source: 0
 - bundler: 
     version: 0.9.25
 - faker: 
@@ -83,10 +75,6 @@ dependencies:
     - :default
     require: 
     - sqlite3
-  authlogic: 
-    version: ">= 0"
-    group: 
-    - :default
   machinist: 
     version: ">= 0"
     group: 

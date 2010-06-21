@@ -9,12 +9,12 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100521051921) do
+ActiveRecord::Schema.define(:version => 20100527005900) do
 
   create_table "games", :force => true do |t|
     t.integer  "player1_id"
     t.integer  "player2_id"
-    t.string   "padded_board_array"
+    t.string   "board_string"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

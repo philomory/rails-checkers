@@ -1,0 +1,23 @@
+User creates Invitation
+Invitation is either an open invitation or a specific invitation
+
+In either case, invitation specifies: 
+Who goes first (inviter/invitee/let invitee decide/random)
+Initial board setup (standard/custom*/random*) *:to be added later
+Optional message
+
+Specific invitations have an invitee, open invitations do not
+
+Specific invitations are seen only by the invitee, who may accept or reject it.
+Open invitations are seen on an 'open invitations' board, where any user may accept or ignore it
+The inviting user can cancel their invitation at any time
+
+When accepting an invitation, if necessary the invitee chooses who goes first (inviter/invitee/random)
+At this point, a Game record is created and the invitation record is probably deleted.
+
+Games have a two players, a board state, turn number, and a result (ongoing,player1 wins, player2 wins, abandoned)
+Also add has_many turns, more for record-keeping than anything else.
+belongs_to player1, belongs_to player2
+
+rows
+references player1, references player2, string board_state, int turn-number, int result

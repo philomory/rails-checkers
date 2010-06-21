@@ -520,7 +520,178 @@ class BoardTest < ActiveSupport::TestCase
     board.do_take_turn(:white,5,2,:jump => :se)
     assert board.rank_and_file(7,3).white_king?, "pawn should have been kinged"
   end
+
+  # ===========================
+  # = Move availability tests =
+  # ===========================
   
+  test "the availablity of a white pawn move is noticed" do
+    bs = <<-END_OF_BOARD
+       B w B B
+      B B _ B
+       _ _ _ _
+      _ _ _ _
+       _ _ _ _
+      _ _ _ _
+       _ _ _ _
+      _ _ _ _
+    END_OF_BOARD
+    board = Board.new(bs)
+    assert board.move_available?(:white), "white has a move available"
+  end
+  
+  test "the availability of a white king move is noticed" do
+    bs = <<-END_OF_BOARD
+        _ _ _ _
+       _ _ _ _
+        _ _ _ _
+       _ _ _ _
+        _ _ _ _
+       _ _ _ _
+        b _ b b
+       b b W b
+    END_OF_BOARD
+    board = Board.new(bs)
+    assert board.move_available?(:white), "white has a move available"
+  end
+  
+  test "the unavailablity of any white moves is noticed" do
+    bs = <<-END_OF_BOARD
+      ____________________
+      b b b b
+       b b b b
+      b b W b
+    END_OF_BOARD
+    board = Board.new(bs)
+    refute board.move_available?(:white), "white has no moves available"
+  end
+  
+  test "the availablity of a black pawn move is noticed" do
+    bs = <<-END_OF_BOARD
+       _ _ _ _
+      _ _ _ _
+       _ _ _ _
+      _ _ _ _
+       _ _ _ _
+      _ _ _ _
+       W _ W W
+      W W b W
+    END_OF_BOARD
+    board = Board.new(bs)
+    assert board.move_available?(:black), "white has a move available"
+  end
+  
+  test "the availability of a black king move is noticed" do
+    bs = <<-END_OF_BOARD
+       w B w w
+      w w _ w
+       _ _ _ _
+      _ _ _ _
+       _ _ _ _
+      _ _ _ _
+       _ _ _ _
+      _ _ _ _
+    END_OF_BOARD
+    board = Board.new(bs)
+    assert board.move_available?(:black), "white has a move available"
+  end
+  
+  test "the unavailablity of any black moves is noticed" do
+    bs = <<-END_OF_BOARD
+       w B w w
+      w w w w
+       w w w w
+      ____________________
+    END_OF_BOARD
+    board = Board.new(bs)
+    refute board.move_available?(:black), "white has no moves available"
+  end
+  
+  # ===========================
+  # = Jump availability tests =
+  # ===========================
+  
+  test "the availability of a white pawn jump is noticed" do
+    bs = <<-END_OF_BOARD
+       _ _ _ w
+      _ _ _ b
+       _ _ _ _ ____________________
+    END_OF_BOARD
+    board = Board.new(bs)
+    assert board.jump_available?(:white), "white has a jump available"
+  end
+  
+  test "the availability of a white king jump is noticed" do
+    bs = <<-END_OF_BOARD
+      ____________________
+      _ _ _ _
+       b _ _ _
+      W _ _ _
+    END_OF_BOARD
+    board = Board.new(bs)
+    assert board.jump_available?(:white), "white has a jump available"
+  end
+  
+  test "the unavailability of any white jumps is noticed" do
+    bs = <<-END_OF_BOARD
+      ____________________
+      b b b b
+       b b b b
+      b b W b
+    END_OF_BOARD
+    board = Board.new(bs)
+    refute board.jump_available?(:white), "white has no jumps available"
+  end
+  
+  test "the availability of a black pawn move is noticed" do
+    bs = <<-END_OF_BOARD
+      ____________________
+      _ _ _ _
+       w _ _ _
+      b _ _ _
+    END_OF_BOARD
+    board = Board.new(bs)
+    assert board.jump_available?(:black), "black has a jump available"
+  end
+  
+  test "the availability of a black king jump is noticed" do
+    bs = <<-END_OF_BOARD
+       _ _ _ B
+      _ _ _ w
+       _ _ _ _ ____________________
+    END_OF_BOARD
+    board = Board.new(bs)
+    assert board.jump_available?(:black), "black has a jump available"
+  end
+  
+  test "the unavailability of any black jump is noticed" do
+    bs = <<-END_OF_BOARD
+       w B w w
+      w w w w
+       w w w w
+      ____________________
+    END_OF_BOARD
+    board = Board.new(bs)
+    refute board.jump_available?(:black), "black has no jumps available"
+  end
+  
+  # ======================
+  # = Win Condition test =
+  # ======================
+  
+  test "a board with both white and black pieces is not a win for either side" do
+    assert_nil Board.new.winner, "neither side should win when pieces of both colors are in play"
+  end
+  
+  test "a board with no white pieces is a win for black" do
+    board = Board.new('_______________________________b')
+    assert_equal :black, board.winner, "black should win with no white pieces"
+  end
+  
+  test "a board with no black pieces is a win for white" do
+    board = Board.new('w_______________________________')
+    assert_equal :white, board.winner, "white should win with no black pieces"
+  end
   
   # ======================
   # = Miscelaneous tests =
@@ -555,7 +726,6 @@ class BoardTest < ActiveSupport::TestCase
     assert_equal bs, board1.position_string, "board1 should not have changed at all"
   end
 
-  
   # ====================
   # = Helper functions =
   # ====================
