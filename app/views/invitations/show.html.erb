@@ -1,0 +1,20 @@
+<p class="notice"><%= notice %></p>
+
+<p>
+  <b>Issuer:</b>
+  <%= @invitation.issuer %>
+</p>
+
+<p>
+  <b>Recipient:</b>
+  <%= @invitation.recipient %>
+</p>
+
+<p>
+  <b>First move:</b>
+  <%= @invitation.first_move %>
+</p>
+
+
+<%= link_to 'Edit', edit_invitation_path(@invitation) %> |
+<%= link_to 'Back', invitations_path %>

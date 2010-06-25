@@ -5,7 +5,8 @@ gem 'rails', '3.0.0.beta3'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'sqlite3-ruby', :require => 'sqlite3'
+gem 'sqlite3-ruby', '1.2.5', :require => 'sqlite3'
+gem 'enumerated_attribute', :git => 'git://github.com/jeffp/enumerated_attribute.git'
 #gem "authlogic", :git => 'git://github.com/odorcicd/authlogic.git', :branch => "rails3"
 #gem 'rails3-generators'
 

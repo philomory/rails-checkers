@@ -1,4 +1,6 @@
 Checkers::Application.routes.draw do |map|
+  resources :invitations
+
   resources :games
 
   resources :users
