@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100623233854) do
+ActiveRecord::Schema.define(:version => 20100628200211) do
 
   create_table "games", :force => true do |t|
     t.integer  "player1_id"
@@ -17,6 +17,8 @@ ActiveRecord::Schema.define(:version => 20100623233854) do
     t.string   "board_string"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "moves_count",  :default => 0
+    t.string   "result",       :default => "ongoing"
   end
 
   create_table "invitations", :force => true do |t|
@@ -26,6 +28,16 @@ ActiveRecord::Schema.define(:version => 20100623233854) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "moves", :force => true do |t|
+    t.integer  "game_id"
+    t.integer  "ply"
+    t.string   "move_string"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "moves", ["game_id", "ply"], :name => "game_ply_on_move", :unique => true
 
   create_table "users", :force => true do |t|
     t.string   "login"

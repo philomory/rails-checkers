@@ -15,7 +15,9 @@ The inviting user can cancel their invitation at any time
 When accepting an invitation, if necessary the invitee chooses who goes first (inviter/invitee/random)
 At this point, a Game record is created and the invitation record is probably deleted.
 
-Games have a two players, a board state, turn number, and a result (ongoing,player1 wins, player2 wins, abandoned)
+Games have a two players, a board state, turn number, and a result (ongoing,white wins via elimination,
+white wins via no moves for black, white wins via black conceeding, black wins via elimination,
+black wins via no moves for white, black wins via white conceeding, abandoned)
 Also add has_many turns, more for record-keeping than anything else.
 belongs_to player1, belongs_to player2
 

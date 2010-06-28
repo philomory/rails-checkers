@@ -95,6 +95,7 @@ class Board
       do_multi_jump(index,*dirs)
     end
     crown_if_needed(new_index)
+    self
   end
   
   def move_available?(color)

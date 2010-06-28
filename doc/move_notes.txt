@@ -1,0 +1,30 @@
+Move has following format:
+
+a number from 0 to 7, specifying rank;
+
+a number from 0 to 4, specifying file;
+
+EITHER:
+   an m, followed by nw, ne, se, sw, specifying a move direction
+OR:
+   a j, followed by any number of nw, ne, se, sw, specifying jumping directions
+
+
+Could do it all in one regex, but it's easier and clearer to do it in a few
+
+/^([0-7])([0-4])(.*)$/
+First capture is the rank, second capture the file, the rest the move(s)
+
+Now, a case against the part of the string matched for the move:
+
+when /^m(nw|ne|se|sw)$/, it's a move and the capture is the move direction
+when /^j((?:nw|ne|se|sw)+)$/, it's a sequence of jumps and the capture is the jump
+directions (which you can split up using .scan(/../))
+else, it's an invalid move string
+
+The move class is only going to chronicle the history of the game; in point of fact,
+the actual workflow will be game.move(user,move_string) => decides whether the move is
+legal, if it is, then alter the board accordingly, and create a new Move object to
+record what happened for posterity.
+
+Look up counter cache column
