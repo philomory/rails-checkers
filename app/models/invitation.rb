@@ -5,6 +5,8 @@ class Invitation < ActiveRecord::Base
   validates_presence_of :issuer, :first_move
   enum_attr :first_move, %w{issuer recipient choice random}
   
+  attr_accessible :recipient, :first_move
+  
   def open?
     recipient.nil?
   end
@@ -27,12 +29,16 @@ class Invitation < ActiveRecord::Base
                          :board_string => Board::DEFAULT_BOARD_STRING)
       
       if game.new_record?
+        errors[:base] = "A new game could not be created: #{game.errors.full_messages.to_sentence}"
         false
       else
         self.destroy
         game
       end
-    end 
+    else
+      errors[:base] = 'This invitation is not your to accept.'
+      false
+    end
   end
   
   

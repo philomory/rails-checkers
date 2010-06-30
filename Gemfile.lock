@@ -1,6 +1,11 @@
 --- 
-hash: 374424a65ede726c455530d497019cd99ca018f8
+hash: 12bdfc91ffe74fcf8c640611ab12eadd39df6fdc
 sources: 
+- Git: 
+    git: git://github.com/justinfrench/formtastic.git
+    branch: rails3
+    uri: git://github.com/justinfrench/formtastic.git
+    ref: 506182bcdb33637b53a8793bc33eff5abe53ba4c
 - Git: 
     git: git://github.com/jeffp/enumerated_attribute.git
     uri: git://github.com/jeffp/enumerated_attribute.git
@@ -25,7 +30,7 @@ specs:
 - activemodel: 
     version: 3.0.0.beta3
 - erubis: 
-    version: 2.6.5
+    version: 2.6.6
 - rack: 
     version: 1.1.0
 - rack-mount: 
@@ -54,19 +59,28 @@ specs:
     version: 3.0.0.beta3
 - activeresource: 
     version: 3.0.0.beta3
+- bcrypt-ruby: 
+    version: 2.1.2
 - bundler: 
     version: 0.9.25
+- warden: 
+    version: 0.10.7
+- devise: 
+    version: 1.1.rc1
 - meta_programming: 
     version: 0.2.2
 - enumerated_attribute: 
     version: 0.2.14
-    source: 0
+    source: 1
 - faker: 
     version: 0.3.1
+- formtastic: 
+    version: 1.0.0.beta
+    source: 0
 - machinist: 
     version: 1.0.6
 - thor: 
-    version: 0.13.6
+    version: 0.13.7
 - railties: 
     version: 3.0.0.beta3
 - rails: 
@@ -78,6 +92,16 @@ dependencies:
     version: = 3.0.0.beta3
     group: 
     - :default
+  devise: 
+    version: = 1.1.rc1
+    group: 
+    - :default
+  bcrypt-ruby: 
+    version: ">= 0"
+    group: 
+    - :default
+    require: 
+    - bcrypt
   sqlite3-ruby: 
     version: = 1.2.5
     group: 
@@ -85,6 +109,10 @@ dependencies:
     require: 
     - sqlite3
   enumerated_attribute: 
+    version: ">= 0"
+    group: 
+    - :default
+  formtastic: 
     version: ">= 0"
     group: 
     - :default

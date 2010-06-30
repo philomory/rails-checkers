@@ -14,6 +14,7 @@ end
 
 Spork.each_run do
   Dir[File.expand_path('../blueprints/*.rb',__FILE__)].each {|f| require f}
+  ActionController::TestCase.class_eval { include Devise::TestHelpers }
 end
 
 class ActiveSupport::TestCase

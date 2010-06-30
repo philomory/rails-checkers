@@ -1,4 +1,6 @@
 class InvitationsController < ApplicationController
+  before_filter :authenticate_user!, :except => [:index, :show]
+  
   # GET /invitations
   # GET /invitations.xml
   def index
@@ -32,16 +34,11 @@ class InvitationsController < ApplicationController
     end
   end
 
-  # GET /invitations/1/edit
-  def edit
-    @invitation = Invitation.find(params[:id])
-  end
-
   # POST /invitations
   # POST /invitations.xml
   def create
-    @invitation = Invitation.new(params[:invitation])
-
+    @invitation = Invitation.create(params[:invitation])
+    @invitation.issuer = current_user
     respond_to do |format|
       if @invitation.save
         format.html { redirect_to(@invitation, :notice => 'Invitation was successfully created.') }
@@ -53,31 +50,35 @@ class InvitationsController < ApplicationController
     end
   end
 
-  # PUT /invitations/1
-  # PUT /invitations/1.xml
-  def update
-    @invitation = Invitation.find(params[:id])
-
-    respond_to do |format|
-      if @invitation.update_attributes(params[:invitation])
-        format.html { redirect_to(@invitation, :notice => 'Invitation was successfully updated.') }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @invitation.errors, :status => :unprocessable_entity }
-      end
-    end
-  end
-
   # DELETE /invitations/1
   # DELETE /invitations/1.xml
   def destroy
     @invitation = Invitation.find(params[:id])
-    @invitation.destroy
-
     respond_to do |format|
-      format.html { redirect_to(invitations_url) }
-      format.xml  { head :ok }
+      if [@invitation.issuer, @invitation.recipient].include?(current_user)
+        @invitation.destroy
+        format.html { redirect_to(invitations_url, :notice => "Invitation cancelled.") }
+        format.xml  { head :ok }
+      else
+        format.html { redirect_to invitations_path, :alert => "This invitation is not yours to cancel." }
+        format.xml  { head :not_authorized }
+      end
     end
   end
+  
+  # POST /invitations/1/accept
+  # POST /invitations/1/accept.xml
+  def accept
+    @invitation = Invitation.find(params[:id])
+    respond_to do |format|
+      if (@game = @invitation.accept(current_user,params[:game_options]))
+        format.html { redirect_to(@game, :notice => 'A new game has begun. Have fun!') }
+        format.xml  { render :xml => @game, :status => :created, :location => @game }
+      else
+        format.html { redirect_to(invitations_path, :alert => @invitation.errors.full_messages.to_sentence) }
+        format.xml  { head :not_authorized }
+      end
+    end
+  end
+  
 end
