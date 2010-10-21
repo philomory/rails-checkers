@@ -1,0 +1,21 @@
+.checkerboard {
+  border-collapse: collapse;
+}
+
+.checkerboard td {
+	border: 1px solid black;
+	height: 40px;
+	width:  40px;
+}
+
+.checkerboard .play_square {
+  background-color: #B22222; /* Firebrick */
+}
+
+.checkerboard .move_square {
+	background-color: #DC143C; /* Crimson */
+}
+
+.checkerboard .non_play_square {
+  background-color: #DEB887; /* BurlyWood*/
+}

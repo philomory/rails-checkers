@@ -1,13 +1,17 @@
 Checkers::Application.routes.draw do |map|
   devise_for :users
 
-  resources :users, :only => [:index, :show]
+  resources :users, :only => [:index, :show] do
+    get :invite, :on => :member
+  end
 
   resources :invitations, :except => [:edit, :update] do
     post :accept, :on => :member
   end
 
-  resources :games
+  resources :games, :only => [:index, :show] do
+    post :move, :on => :member
+  end
 
   root :to => 'games#index'
   # The priority is based upon order of creation:

@@ -13,6 +13,10 @@ class Invitation < ActiveRecord::Base
   
   scope :open, where(:recipient_id => nil)
   
+  def user_can_accept?(user)
+    open? ? user != issuer : user == recipient
+  end
+  
   def accept(user,options = {})
     if open? or user == recipient
       f_m = first_move_is_choice? ? options[:first_move] : first_move

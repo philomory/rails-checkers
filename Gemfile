@@ -6,7 +6,7 @@ gem 'bcrypt-ruby', :require => 'bcrypt'
 
 gem 'sqlite3-ruby', '1.2.5', :require => 'sqlite3'
 gem 'enumerated_attribute', :git => 'git://github.com/jeffp/enumerated_attribute.git'
-gem 'formtastic', :git => 'git://github.com/justinfrench/formtastic.git', :branch => 'rails3'
+gem 'formtastic', '1.0.0.beta3' # On update from rails 3 beta 3 to anything higher, can update formtastic farther.
 
 group :test do
   gem 'machinist'

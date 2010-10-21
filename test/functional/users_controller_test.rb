@@ -13,4 +13,13 @@ class UsersControllerTest < ActionController::TestCase
     assert_response :success
   end
   
+  test "should invite user" do
+    sign_in User.make
+    recipient = User.make
+    get :invite, :id => recipient.to_param
+
+    assert_response :success
+    assert_equal recipient, assigns(:invitation).recipient
+  end
+  
 end

@@ -11,39 +11,29 @@ class GamesControllerTest < ActionController::TestCase
     assert_not_nil assigns(:games)
   end
 
-  test "should get new" do
-    get :new
-    assert_response :success
-  end
-
-  test "should create game" do
-    assert_difference('Game.count') do
-      post :create, :game => @game.attributes
-    end
-
-    assert_redirected_to game_path(assigns(:game))
-  end
-
   test "should show game" do
     get :show, :id => @game.to_param
     assert_response :success
   end
-
-  test "should get edit" do
-    get :edit, :id => @game.to_param
-    assert_response :success
-  end
-
-  test "should update game" do
-    put :update, :id => @game.to_param, :game => @game.attributes
-    assert_redirected_to game_path(assigns(:game))
-  end
-
-  test "should destroy game" do
-    assert_difference('Game.count', -1) do
-      delete :destroy, :id => @game.to_param
+  
+  test "should allow move for appropriate user" do
+    sign_in @game.player1
+    assert_difference('@game.moves.count') do
+      post :move, :id => @game.to_param, :move_string => '20mse'
     end
 
-    assert_redirected_to games_path
+    assert_redirected_to game_path(@game)
+    assert_not_nil flash[:notice], flash
   end
+
+  test "should not allow move inappropriate player" do
+    sign_in User.make
+    assert_no_difference('@game.moves.count') do
+      post :move, :id => @game.to_param, :move_string => '20mse'
+    end
+    
+    assert_redirected_to game_path(@game)
+    assert_not_nil flash[:alert]
+  end
+
 end

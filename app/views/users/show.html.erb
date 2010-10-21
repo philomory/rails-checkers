@@ -10,5 +10,5 @@
   <%= @user.email %>
 </p>
 
-
+<%= link_to 'Invite this user to play.', invite_user_path(@user) %>
 <%= link_to 'Back', users_path %>

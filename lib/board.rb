@@ -106,6 +106,50 @@ class Board
     end
   end
   
+  def available_moves(color)
+    # These regular expressions are used for checking each of the directions of movement.
+    # Where the board string matches one of them, there is a valid move in the appropriate
+    # direction.
+    #
+    # The two colors are different because black pawns and white pawns move in opposite
+    # directions, though Kings all move the same way.
+    # 
+    # The expressions need to be checked as zero-width lookahead capturing groups because 
+    # otherwise we can't have overlapping matches - no two adjacent pieces would be able
+    # to move in the same direction, among other problems. They're written bare and
+    # interpolated into a ZWLA for what I thought was clarity, but I'm not sure it helps
+    # and may change it back.
+    ne,nw,se,sw = case color
+    when :white then %w{ W...._ W..._ _...[wW] _....[wW] }
+    when :black then %w{ [bB]...._ [bB]..._ _...B _....B }
+    end.map {|s| /(?=(#{s}))/ }
+    
+    # Use the private 'scan' method, shared with available_jumps, to generate the hash.
+    scan(ne,nw,se,sw)
+  end
+  
+  def available_jumps(color)
+    # See the comments in available_moves for clarification on the intent here.
+    ne,nw,se,sw = case color
+    when :white then %w{ W....[bB]...._ W...[bB]..._ _...[bB]...[wW] _....[bB]....[wW] }
+    when :black then %w{ [bB]....[wW]...._ [bB]...[wW]..._ _...[wW]...B _....[wW]....B }
+    end.map {|s| /(?=(#{s}))/ }
+    
+    scan(ne,nw,se,sw)
+  end
+  
+  def available_actions(color)
+    if (result = available_jumps(color)).any?
+      result[:type] = :jump
+    elsif (result = available_moves(color)).any? 
+      result[:type] = :move
+    else
+      result = nil
+    end
+    result
+  end
+  
+  
   # Considered using a more legible iterative approach here, but the regex approach
   # is _twenty-eight times faster_. Considering that this is an operation that will
   # have to be performed quite frequently, totally worth it. Anyway, the regex is
@@ -199,9 +243,59 @@ class Board
     end
   end
   
+  
+  
+  # Scan the board string for regexen representing moves in the four possible directions.
+  def scan(ne,nw,se,sw)
+    # TODO: Refactor this to be either more abstract, or less. At the moment it's in an
+    # ugly middle-ground that is not quite straightforward enough to justify it's verbosity,
+    # nor DRY enough to justify its complexity. That being said, 90% of the work is done,
+    # so only 90% is left.
+    
+    # This method requires some degree of explanation.
+    
+    # First, set up a hash to hold the moves.
+    moves = {}
+
+    # Now we run each regex across the string using scan. The purpose of the
+    # 'off' parameter is to indicate whether we are looking at the beginning of
+    # the match or the end. Since we want the location of the piece that's moving,
+    # not the location of the square it's moving to, for north (left-to-right)
+    # movement we use 0, for south (right-to-left) we use 1.
+    [[ne,:ne,0],[nw,:nw,0],[se,:se,1],[sw,:sw,1]].each do |regx,dir,off|
+
+      # Here we use scan with our passed in regex.
+      @padded_board_string.scan(regx) do
+
+        # Scan, unfortunately, passes an array of strings to the block rather than
+        # a MatchData object. Fortunately, our MatchData is available in the magic
+        # variable $~. We check the offsets of the first capturing group, using the
+        # off parameter described above. We subtract one when checking the end of the
+        # match because we want the last char in the match while the offset method
+        # gives us the first char after the match.
+        index = $~.offset(1)[off] - off
+
+        # Here we're just converting from string index into rank & file coordinates
+        # and storing the results appropriately.
+        coords = coords_for_index(index)
+        moves[coords] ||= []
+        moves[coords] << dir
+      end
+    end
+    moves
+  end
+  
+  
   def padded_index(rank,file)
     37 - (rank * 4.5).ceil + file
   end
+  
+  def coords_for_index(index)
+    rank = ((36 - index) / 4.5).ceil # Kinda a stupid formula, but it works.
+    file = index + (rank * 4.5).ceil - 37
+    [rank,file]
+  end
+  
   
   def chr(index)
     @padded_board_string[index]

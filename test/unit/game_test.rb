@@ -78,39 +78,39 @@ class GameTest < ActiveSupport::TestCase
     game = Game.make
     control = game.board
     control.do_take_turn(:white,2,0,:move => :se)
-    game.move('20mse')
+    game.move(game.player1,'20mse')
     assert_equal control, game.board
   end
   
   test "a move made should be recorded" do
     game = Game.make
     assert_difference('game.moves.size') do
-      game.move('20mse')
+      game.move(game.player1,'20mse')
     end
   end
   
   test "an invalid move should not change the board" do
     game = Game.make
     control = game.board
-    game.move('30mse') rescue nil # There's no piece there
+    game.move(game.player1,'30mse') rescue nil # There's no piece there
     assert_equal control, game.board
   end
   
   test "an invalid move shold not be recorded" do
     game = Game.make
     assert_no_difference('game.moves.size') do
-      game.move('30mse') rescue nil
+      game.move(game.player1,'30mse') rescue nil
     end
   end
   
   test "after each move, play should change sides" do
     game = Game.make
     assert_equal :white, game.color_to_move
-    game.move('20mse')
+    game.move(game.player1,'20mse')
     assert_equal :black, game.color_to_move
-    game.move('53mne')
+    game.move(game.player2,'53mne')
     assert_equal :white, game.color_to_move
-    game.move('21mse')
+    game.move(game.player1,'21mse')
     assert_equal :black, game.color_to_move
   end
   
@@ -121,7 +121,7 @@ class GameTest < ActiveSupport::TestCase
       _ _ _ _ ____________________
     END_OF_BOARD
     game = Game.make(:board_string => bs)
-    game.move('00jse')
+    game.move(game.player1,'00jse')
     assert_equal :white_elim, game.result
   end
   
@@ -132,8 +132,8 @@ class GameTest < ActiveSupport::TestCase
      _ b b _ ____________________
     END_OF_BOARD
     game = Game.make(:board_string => bs)
-    game.move('03msw')
-    game.move('22jne')
+    game.move(game.player1,'03msw')
+    game.move(game.player2,'22jne')
     assert_equal :black_lock, game.result
   end
   
@@ -147,7 +147,7 @@ class GameTest < ActiveSupport::TestCase
     game = Game.make(:result => :white_give)
     control = game.board
     assert_no_difference('game.moves.size') do
-      game.move('20msw')
+      game.move(game.player1,'20msw')
     end
     assert_equal control, game.board
   end

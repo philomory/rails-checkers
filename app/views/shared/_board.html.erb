@@ -1,0 +1,11 @@
+<table class="checkerboard">
+	<% board_string ||= "" %>
+	<% moves ||= {} %>
+	<% 8.times do |row| %>
+		 <%= content_tag(:tr, :class => row) do %>
+			<% 8.times do |col| %>
+				<%= checkers_square(row,col,board_string,moves) %>
+			<% end %>
+		<% end %>
+	<% end %>
+</table>

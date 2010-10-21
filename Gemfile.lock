@@ -1,15 +1,10 @@
 --- 
-hash: 12bdfc91ffe74fcf8c640611ab12eadd39df6fdc
+hash: 5bf69dbcdfd0a49d915b3f9a1173e49b2a3c08a5
 sources: 
-- Git: 
-    git: git://github.com/justinfrench/formtastic.git
-    branch: rails3
-    uri: git://github.com/justinfrench/formtastic.git
-    ref: 506182bcdb33637b53a8793bc33eff5abe53ba4c
 - Git: 
     git: git://github.com/jeffp/enumerated_attribute.git
     uri: git://github.com/jeffp/enumerated_attribute.git
-    ref: c5e2944c7f5c0352e9af4c0ede1f028f454678b2
+    ref: 68a8b339892ae475b1d751eb58519e9736f94b76
 - Rubygems: 
     uri: http://rubygems.org
 specs: 
@@ -22,9 +17,9 @@ specs:
 - i18n: 
     version: 0.3.7
 - memcache-client: 
-    version: 1.8.3
+    version: 1.8.5
 - tzinfo: 
-    version: 0.3.22
+    version: 0.3.23
 - activesupport: 
     version: 3.0.0.beta3
 - activemodel: 
@@ -34,9 +29,9 @@ specs:
 - rack: 
     version: 1.1.0
 - rack-mount: 
-    version: 0.6.6
+    version: 0.6.13
 - rack-test: 
-    version: 0.5.4
+    version: 0.5.6
 - actionpack: 
     version: 3.0.0.beta3
 - mime-types: 
@@ -46,7 +41,7 @@ specs:
 - treetop: 
     version: 1.4.8
 - mail: 
-    version: 2.2.5
+    version: 2.2.7
 - text-hyphen: 
     version: 1.0.0
 - text-format: 
@@ -70,17 +65,16 @@ specs:
 - meta_programming: 
     version: 0.2.2
 - enumerated_attribute: 
-    version: 0.2.14
-    source: 1
+    version: 0.2.16
+    source: 0
 - faker: 
     version: 0.3.1
 - formtastic: 
-    version: 1.0.0.beta
-    source: 0
+    version: 1.0.0.beta3
 - machinist: 
     version: 1.0.6
 - thor: 
-    version: 0.13.7
+    version: 0.13.8
 - railties: 
     version: 3.0.0.beta3
 - rails: 
@@ -113,7 +107,7 @@ dependencies:
     group: 
     - :default
   formtastic: 
-    version: ">= 0"
+    version: = 1.0.0.beta3
     group: 
     - :default
   machinist: 

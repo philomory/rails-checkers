@@ -1,19 +1,16 @@
 <p class="notice"><%= notice %></p>
 
 <p>
-  <b>Issuer:</b>
-  <%= @invitation.issuer %>
+  <b><%= @invitation.issuer %></b> has invited <b><%= @invitation.recipient %></b> to play checkers.
 </p>
 
 <p>
-  <b>Recipient:</b>
-  <%= @invitation.recipient %>
+  <b>Details:</b>
+	<ul>
+	<li><b>First move:</b> <%= @invitation.first_move %></li>
 </p>
 
-<p>
-  <b>First move:</b>
-  <%= @invitation.first_move %>
-</p>
-
-
+<% if current_user and current_user.can_accept? @invitation %>
+	<%= link_to 'Accept', accept_invitation_path(@invitation), :method => :post %>
+<% end %>
 <%= link_to 'Back', invitations_path %>

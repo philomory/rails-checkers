@@ -607,6 +607,20 @@ class BoardTest < ActiveSupport::TestCase
     refute board.move_available?(:black), "white has no moves available"
   end
   
+  test "can find all available white moves" do
+    bs = <<-END_OF_BOARD
+        w w w w
+       w w w w
+        w _ w w
+       _ W _ _
+        _ _ _ _ ___________b
+    END_OF_BOARD
+    board = Board.new(bs)
+    expected = {[2,0] => [:sw], [2,2] => [:se,:sw], [2,3] => [:sw], [3,1] => [:ne,:se,:sw], [1,2] => [:sw], [1,1] => [:se] }
+    actual = board.available_moves(:white)
+    assert_equal expected, actual
+  end
+  
   # ===========================
   # = Jump availability tests =
   # ===========================
@@ -673,6 +687,80 @@ class BoardTest < ActiveSupport::TestCase
     END_OF_BOARD
     board = Board.new(bs)
     refute board.jump_available?(:black), "black has no jumps available"
+  end
+  
+  test "can find all available black jumps" do
+    bs = <<-END_OF_BOARD
+       _ _ _ B
+      b w W _
+       w B b _
+      w _ w _
+       b _ _ _
+      w _ w _
+       w b _ b
+      b b b b
+    END_OF_BOARD
+    board = Board.new(bs)
+    expected = {
+      [2,1] => [:ne,:nw,:se],
+      [2,2] => [:nw],
+      [6,1] => [:ne],
+      [7,0] => [:ne]
+    }
+    actual = board.available_jumps(:black)
+    assert_equal expected, actual
+  end
+  
+  
+  # =====================
+  # = Available Actions =
+  # =====================
+  
+  test "A board with available jumps returns only jumps" do
+    bs = <<-END_OF_BOARD
+       _ _ _ B
+      b w W _
+       w B b _
+      w _ w _
+       b _ _ _
+      w _ w _
+       w b _ b
+      b b b b
+    END_OF_BOARD
+    board = Board.new(bs)
+    expected = {
+      :type => :jump,
+      [2,1] => [:ne,:nw,:se],
+      [2,2] => [:nw],
+      [6,1] => [:ne],
+      [7,0] => [:ne]
+    }
+    actual = board.available_actions(:black)
+    assert_equal expected, actual
+  end
+  
+  test "A board with available moves and no jumps reports the moves" do
+    board = Board.new('wwww___________________________b')
+    expected = {
+      :type => :move,
+      [0,0] => [:se,:sw],
+      [0,1] => [:se,:sw],
+      [0,2] => [:se,:sw],
+      [0,3] => [:sw]
+    }
+    actual = board.available_actions(:white)
+    assert_equal expected, actual
+  end
+  
+  test "A board with no available moves or jumps reports nothing (i.e. nil)" do
+    bs = <<-END_OF_BOARD
+       w B w w
+      w w w w
+       w w w w
+      ____________________
+    END_OF_BOARD
+    board = Board.new(bs)
+    assert_nil board.available_actions(:black)
   end
   
   # ======================

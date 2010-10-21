@@ -1,3 +1,8 @@
+<% content_for :javascript_includes do %>
+	<%= javascript_include_tag "checkers.js" %>
+<% end %>
+	
+
 <p class="notice"><%= notice %></p>
 
 <p>
@@ -11,10 +16,18 @@
 </p>
 
 <p>
-  <b>Padded board array:</b>
+  <b>Board String:</b>
   <%= @game.board_string %>
 </p>
 
+<%= render :partial => 'shared/board', :locals => { :board_string => @game.board_string, :moves => @moves } %>
 
-<%= link_to 'Edit', edit_game_path(@game) %> |
+<% if current_user_moves? %>
+	<%= form_tag "#{game_path(@game)}/move" do %>
+		<%= hidden_field_tag :id, @game.to_param %>
+		<b><%= label_tag 'move_string' %>:</b> <%= text_field_tag :move_string %> 
+		<%= submit_tag %>	
+	<% end %>
+<% end %>
+
 <%= link_to 'Back', games_path %>

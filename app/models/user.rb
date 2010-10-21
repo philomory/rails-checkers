@@ -13,4 +13,12 @@ class User < ActiveRecord::Base
     username
   end
   
+  def can_accept?(invitation)
+    invitation.user_can_accept?(self)
+  end
+  
+  def to_s
+    username
+  end
+  
 end

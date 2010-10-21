@@ -75,14 +75,26 @@ class Game < ActiveRecord::Base
     [color, rank, file, action]
   end
 
-  def move(move_string)
-    return false unless result_is_ongoing?
-    args = process_move_string(move_string)
-    new_board_string = board.do_take_turn(*args).position_string
-    self.board_string = new_board_string
-    self.moves.create(:move_string => move_string)
-    self.elimination_check
-    self.no_moves_check(color_to_move) if result_is_ongoing?
+  def move(user,move_string)
+    if !result_is_ongoing?
+      errors[:base] = "This game is already over."
+      false
+    elsif user != player_to_move
+      if user == player_for_color(other_color(color_to_move))
+        errors[:base] = "It is not your turn."
+      else
+        errors[:base] = "This is not your game."
+      end
+      false
+    else
+      args = process_move_string(move_string)
+      new_board_string = board.do_take_turn(*args).position_string
+      self.board_string = new_board_string
+      self.moves.create(:move_string => move_string)
+      self.elimination_check
+      self.no_moves_check(color_to_move) if result_is_ongoing?
+      self.save
+    end
   end  
 
   def elimination_check
@@ -102,5 +114,10 @@ class Game < ActiveRecord::Base
     return false unless result_is_ongoing?
     self.result = "#{other_color(color)}_give"
   end
+  
+  def available_moves
+    board.available_actions(color_to_move)
+  end
+  
   
 end
