@@ -36,6 +36,16 @@ class GamesController < ApplicationController
     end
   end
   
+  def available_moves
+    game = Game.find(params[:id])
+    respond_to do |format|
+      if current_user_moves?(game)
+        format.json { render :json => game.available_moves }
+      else
+        format.json { render :json => false }
+      end
+    end
+  end
   
   def current_user_moves?(game=@game)
     game.result_is_ongoing? && game.player_to_move == current_user

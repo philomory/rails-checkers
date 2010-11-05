@@ -46,6 +46,12 @@ module Checkers
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
     
-    config.action_view.javascript_expansions[:defaults] = %w(jquery rails)
+    # Switch the javascript_include_tag :defaults to use jquery instead of 
+    # the default prototype helpers.
+    if ActionView::Helpers::AssetTagHelper.const_defined?(:JAVASCRIPT_DEFAULT_SOURCES)
+      ActionView::Helpers::AssetTagHelper.send(:remove_const, "JAVASCRIPT_DEFAULT_SOURCES")
+    end
+    ActionView::Helpers::AssetTagHelper::JAVASCRIPT_DEFAULT_SOURCES = ['jquery.js', 'rails.js']
+    ActionView::Helpers::AssetTagHelper::reset_javascript_include_default
   end
 end

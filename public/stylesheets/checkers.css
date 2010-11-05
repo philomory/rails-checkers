@@ -2,10 +2,20 @@
   border-collapse: collapse;
 }
 
+.checkerboard tr {
+	height: 40px;
+}
+
 .checkerboard td {
 	border: 1px solid black;
 	height: 40px;
 	width:  40px;
+}
+
+.checkerboard td > div {
+	position: relative;
+	height: 38px;
+	width: 38px;
 }
 
 .checkerboard .play_square {
@@ -19,3 +29,35 @@
 .checkerboard .non_play_square {
   background-color: #DEB887; /* BurlyWood*/
 }
+
+.checkerboard .selected {
+	background-color: blue;
+}
+
+.checkerboard .dir_arrow {
+	color: white;
+	position: absolute;
+	font-weight: bold;
+	font-size: 1.3em;
+}
+
+.checkerboard .selected .nw_arrow {
+	top: -20px;
+	left: -10px;
+}
+
+.checkerboard .selected .ne_arrow {
+	top: -20px;
+	left: 35px;
+}
+
+.checkerboard .selected .sw_arrow {
+	top: 30px;
+	left: -10px;
+}
+
+.checkerboard .selected .se_arrow {
+	top: 30px;
+	left: 35px;
+}
+

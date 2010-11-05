@@ -11,6 +11,7 @@ Checkers::Application.routes.draw do |map|
 
   resources :games, :only => [:index, :show] do
     post :move, :on => :member
+    get :available_moves, :on => :member
   end
 
   root :to => 'games#index'

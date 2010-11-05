@@ -17,7 +17,10 @@ module ApplicationHelper
       rank, file = row, col/2
       tag_class = 'play_square'
       tag_class += ' move_square' if available_moves.key?([rank,file])
-      content_tag(:td,board_string[rank*4 + file], :class => tag_class, :id => square_id(row,col))
+      content_tag(:td, :class => tag_class, :id => square_id(row,col),
+                  'data-rank' => rank, 'data-file' => file) do
+        content_tag(:div,board_string[rank*4 + file])
+      end
     else
       tag(:td,:class => 'non_play_square')
     end
